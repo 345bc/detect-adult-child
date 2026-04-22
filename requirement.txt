@@ -16,3 +16,6 @@ scikit-learn
 
 # Tiện ích bổ sung (tùy chọn nhưng nên có)
 tensorboard
+
+#Ui
+streamlit
