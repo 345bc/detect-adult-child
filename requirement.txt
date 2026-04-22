@@ -1,0 +1,18 @@
+# Thư viện cốt lõi cho AI
+torch
+torchvision
+torchaudio
+
+# Xử lý hình ảnh và hiển thị
+opencv-python
+pillow
+numpy
+
+# Hỗ trợ huấn luyện và biểu đồ
+matplotlib
+tqdm
+pandas
+scikit-learn
+
+# Tiện ích bổ sung (tùy chọn nhưng nên có)
+tensorboard
