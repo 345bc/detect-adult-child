@@ -25,9 +25,34 @@ upload_file=st.file_uploader(
 #             st.write(f"Kích thước ảnh: {image.size}")
 #             st.write(f"Định dạng: {image.format}")
 #             st.write("---")
+if 'show_camera' not in st.session_state:
+    st.session_state.show_camera = False 
+
+show = st.session_state.show_camera 
 
 
-# cam_photo=st.camera_input("Chụp ảnh")
+
+
+col1,col2=st.columns(2)
+with col1:
+    if not show:  
+        if st.button("📷 Bật Camera", type="primary", use_container_width=True):
+            st.session_state.show_camera = True  
+            st.rerun()  
+
+with col2:
+    if show: 
+        if st.button("❌ Tắt Camera", use_container_width=True):
+            st.session_state.show_camera = False 
+            st.rerun()  
+
+
+
+if st.session_state.show_camera==True:
+    cam_photo = st.camera_input("Camera")
+    
+    if cam_photo:
+        st.success("Chụp ảnh thành công!")
 
 if upload_file is  not None:
     image=Image.open(upload_file)
