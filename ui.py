@@ -48,6 +48,7 @@ with col2:
 
 
 
+
 if st.session_state.show_camera==True:
     cam_photo = st.camera_input("Camera")
     
@@ -64,3 +65,4 @@ if upload_file is  not None:
     st.write("Thông tin ảnh")
     st.write(f"Kích thước ảnh: {image.size}")
     st.write(f"Định dạng: {image.format}")
+    

@@ -1,8 +1,8 @@
 from PIL import Image
 import os
 
-in_folder="datasets"
-out_folder="data"
+in_folder="root_datasets"
+out_folder="datasets"
 
 def resize_image(image,size=224):
     image.thumbnail((size,size))
