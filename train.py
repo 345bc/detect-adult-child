@@ -45,8 +45,8 @@ scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
 # 2. LOAD DỮ LIỆU
 # ============================================
 
-# Đường dẫn đến dataset (đã upload lên Google Drive)
-data_dir = "/content/drive/MyDrive/resnet_data/datasets"  # ← SỬA ĐƯỜNG DẪN
+# Datasets path
+data_dir = "/content/drive/MyDrive/datasets"
 
 # Transform cho ảnh
 transform = transforms.Compose(
