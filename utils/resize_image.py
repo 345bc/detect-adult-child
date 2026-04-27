@@ -21,6 +21,7 @@ for image_file in os.listdir(in_folder):
             image = Image.open(path).convert("RGB")
             image = resize_image(image)
             image.save(os.path.join(out_folder, image_file))
-            print("Done")
         except Exception as ex:
             print(ex)
+
+print("Done")

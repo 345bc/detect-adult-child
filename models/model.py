@@ -60,7 +60,7 @@ class ResidualBlock(nn.Module):
 
 class ResNet18(nn.Module):
     def __init__(self, num_classes=2):
-        super(ResNet18, self).__init__()
+        super().__init__()
 
         self.in_channels = 64
 
@@ -100,42 +100,3 @@ class ResNet18(nn.Module):
         x = torch.flatten(x, 1)
         x = self.fc(x)
         return x
-
-
-if __name__ == "__main__":
-    print("=" * 50)
-    print("KIỂM TRA MÔ HÌNH RESNET-18")
-    print("=" * 50)
-
-    # 1. Tạo model
-    print("\n1. Đang tạo model...")
-    model = ResNet18(num_classes=2)
-
-    # 2. Tạo dữ liệu giả (batch=4, 3 kênh màu, 224x224)
-    print("2. Tạo dữ liệu đầu vào giả...")
-    dummy_input = torch.randn(4, 3, 224, 224)
-    print(f"   Input shape: {dummy_input.shape}")
-
-    # 3. Chạy forward
-    print("3. Chạy forward qua mạng...")
-    output = model(dummy_input)
-    print(f"   Output shape: {output.shape}")
-
-    # 4. Kiểm tra kết quả
-    if output.shape == (4, 2):
-        print("\n✅ ĐÚNG: Output shape là (4, 2)")
-    else:
-        print(f"\n❌ SAI: Output shape phải là (4, 2), nhưng được {output.shape}")
-
-    # 5. Đếm số tham số
-    total_params = sum(p.numel() for p in model.parameters())
-    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-
-    print(f"\n📊 THÔNG SỐ MÔ HÌNH:")
-    print(f"   Tổng số tham số: {total_params:,}")
-    print(f"   Tham số train được: {trainable_params:,}")
-    print(f"   Kích thước model: {total_params * 4 / 1024 / 1024:.2f} MB")
-
-    print("\n" + "=" * 50)
-    print("🎉 MÔ HÌNH HOẠT ĐỘNG BÌNH THƯỜNG!")
-    print("=" * 50)

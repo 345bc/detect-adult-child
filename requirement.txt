@@ -1,7 +1,7 @@
-# Thư viện cốt lõi cho AI
-torch
-torchvision
-torchaudio
+ # Thư viện cốt lõi cho AI
+# torch
+# torchvision
+# torchaudio
 
 # Xử lý hình ảnh và hiển thị
 opencv-python
