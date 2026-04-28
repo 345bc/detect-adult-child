@@ -61,3 +61,7 @@ weights/
 checkpoints/
 outputs/
 root_datasets/
+
+
+# Others
+readme_skill.md
