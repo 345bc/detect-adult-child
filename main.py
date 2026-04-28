@@ -159,8 +159,8 @@ def process_video(model, source, is_webcam=False):
 if __name__ == "__main__":
     # Configuration
     # SOURCE = 0
-    # SOURCE = "test_video.mp4"       # Chế độ 2: Video file
-    SOURCE = "test.jpg"
+    SOURCE = "test/test_video_00001.mp4"
+    # SOURCE = "test.jpg"
 
     # Load model
     model = load_model()
