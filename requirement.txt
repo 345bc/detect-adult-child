@@ -1,4 +1,4 @@
- # Thư viện cốt lõi cho AI
+# Thư viện cốt lõi cho AI
 torch
 torchvision
 torchaudio
@@ -7,6 +7,9 @@ torchaudio
 opencv-python
 pillow
 numpy
+
+# Labeling với YOLO
+ultralytics
 
 # Hỗ trợ huấn luyện và biểu đồ
 matplotlib
@@ -17,5 +20,5 @@ scikit-learn
 # Tiện ích bổ sung (tùy chọn nhưng nên có)
 tensorboard
 
-#Ui
+# UI
 streamlit
