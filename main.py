@@ -4,10 +4,8 @@ from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 from models.model import ResNet18
 
-# ============================================
-# 1. LOAD DỮ LIỆU
-# ============================================
-data_dir = "/content/datasets"  # Đường dẫn đến dataset
+# Configuration
+data_dir = "datasets"
 
 transform = transforms.Compose(
     [
@@ -17,7 +15,7 @@ transform = transforms.Compose(
     ]
 )
 
-# Load dataset (nếu có test folder riêng)
+# Load dataset
 test_dataset = datasets.ImageFolder(
     root=os.path.join(data_dir, "test"), transform=transform
 )
@@ -45,7 +43,7 @@ print(f"📊 Test samples: {len(test_dataset)}")
 # ============================================
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = ResNet18(num_classes=2).to(device)
-model.load_state_dict(torch.load("best_model.pth", map_location=device))
+model.load_state_dict(torch.load("best_resnet_model.pth", map_location=device))
 model.eval()
 
 print("✅ Model loaded successfully!")
