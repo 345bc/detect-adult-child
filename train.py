@@ -23,28 +23,19 @@ def get_data_loaders(data_dir, batch_size=64, num_workers=2):
 
     transform_train = transforms.Compose(
         [
-            # 1. Resize lớn hơn trước khi crop (tăng đa dạng)
             transforms.Resize((256, 256)),
-            # 2. Random crop về 224 (mỗi lần cắt 1 vùng khác nhau)
             transforms.RandomCrop(224),
-            # 3. Lật ngang (50%)
             transforms.RandomHorizontalFlip(p=0.5),
-            # 4. Xoay (tăng góc lên 20 độ)
             transforms.RandomRotation(degrees=20),
-            # 5. Thay đổi màu sắc (tăng cường)
             transforms.ColorJitter(
-                brightness=0.3,  # Độ sáng (±30%)
-                contrast=0.3,  # Độ tương phản (±30%)
-                saturation=0.2,  # Độ bão hòa (±20%)
-                hue=0.1,  # Màu sắc (±10%)
+                brightness=0.3,
+                contrast=0.3,
+                saturation=0.2,
+                hue=0.1,
             ),
-            # 6. Chuyển sang ảnh xám ngẫu nhiên (10%)
             transforms.RandomGrayscale(p=0.1),
-            # 7. Chuyển thành tensor
             transforms.ToTensor(),
-            # 8. Chuẩn hóa
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
-            # 9. Xóa ngẫu nhiên 1 vùng hình chữ nhật (20%) - giống Cutout
             transforms.RandomErasing(
                 p=0.2, scale=(0.02, 0.2), ratio=(0.3, 3.3), value=0
             ),
@@ -147,7 +138,10 @@ if __name__ == "__main__":
     data_dir = "datasets"
     batch_size = 64
     num_epochs = 60
-    learning_rate = 0.0001
+
+    # ===== SGD CONFIG (ĐÃ SỬA) =====
+    learning_rate = 0.01  # ← SỬA: từ 0.0001 lên 0.01
+    momentum = 0.9  # ← THÊM: momentum cho SGD
     weight_decay = 0.0001
 
     # ===== 2. LOAD DỮ LIỆU =====
@@ -164,8 +158,18 @@ if __name__ == "__main__":
     # ===== 3. KHỞI TẠO MODEL =====
     model = ResNet18(num_classes=2).to(device)
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.AdamW(
-        model.parameters(), lr=learning_rate, weight_decay=weight_decay
+
+    # ===== SGD OPTIMIZER (ĐÃ SỬA) =====
+    optimizer = torch.optim.SGD(
+        model.parameters(),
+        lr=learning_rate,
+        momentum=momentum,
+        weight_decay=weight_decay,
+    )
+
+    # ===== SCHEDULER CHO SGD (THÊM MỚI) =====
+    scheduler = torch.optim.lr_scheduler.StepLR(
+        optimizer, step_size=20, gamma=0.5  # Giảm lr sau 20 epoch  # Giảm 1 nửa
     )
 
     # ===== 4. TRAINING LOOP =====
@@ -192,16 +196,20 @@ if __name__ == "__main__":
         val_losses.append(val_loss)
         val_accs.append(val_acc)
 
+        # Cập nhật scheduler
+        current_lr = scheduler.get_last_lr()[0]
+        scheduler.step()
+
         # In kết quả
         print(f"\n📊 Epoch {epoch+1}/{num_epochs}")
         print(f"   Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.2f}%")
         print(f"   Val Loss: {val_loss:.4f} | Val Acc: {val_acc:.2f}%")
-        print(f"   Learning Rate: {learning_rate}")
+        print(f"   Learning Rate: {current_lr:.6f}")
 
         # Lưu model tốt nhất
         if val_acc > best_val_acc:
             best_val_acc = val_acc
-            torch.save(model.state_dict(), "best_resnet_model.pth")
+            torch.save(model.state_dict(), f"model_{val_acc:.2f}.pt")
             print(f"   ✅ Đã lưu model mới (Val Acc: {val_acc:.2f}%)")
 
         print("-" * 50)
@@ -211,6 +219,8 @@ if __name__ == "__main__":
     print("📊 ĐÁNH GIÁ TRÊN TẬP TEST")
     print("=" * 50)
 
+    # Load model tốt nhất để test
+    model.load_state_dict(torch.load(f"model_{best_val_acc:.2f}.pt"))
     model.eval()
     test_correct, test_total = 0, 0
 
@@ -252,5 +262,5 @@ if __name__ == "__main__":
     print("\n" + "=" * 50)
     print("🎉 HOÀN THÀNH HUẤN LUYỆN!")
     print("=" * 50)
-    print(f"📁 Model đã lưu: best_resnet_model.pth")
+    print(f"📁 Model đã lưu: model_{best_val_acc:.2f}.pt")
     print(f"📁 Biểu đồ: training_curves.png")
