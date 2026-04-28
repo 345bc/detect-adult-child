@@ -173,13 +173,13 @@ for epoch in range(num_epochs):
     val_accs.append(val_acc)
 
     # Cập nhật scheduler
-    scheduler.step()
+    # scheduler.step()
 
     # In kết quả
     print(f"\n📊 Epoch {epoch+1}/{num_epochs}")
     print(f"   Train Loss: {train_loss_avg:.4f} | Train Acc: {train_acc:.2f}%")
     print(f"   Val Loss: {val_loss_avg:.4f} | Val Acc: {val_acc:.2f}%")
-    print(f"   Learning Rate: {scheduler.get_last_lr()[0]:.6f}")
+    print(f"   Learning Rate: {learning_rate}")
 
     # Lưu model tốt nhất
     if val_acc > best_val_acc:
