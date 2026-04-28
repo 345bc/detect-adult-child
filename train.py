@@ -29,21 +29,28 @@ print(f"Using device: {device}")
 # Loss function (chỉ 1 lần)
 criterion = nn.CrossEntropyLoss()
 
-# Optimizer (chỉ 1 lần)
-learning_rate = 0.1
-momentum = 0.9
+# Optimizer
+learning_rate = 0.0001
 weight_decay = 0.0001
 
-optimizer = optim.SGD(
-    model.parameters(), lr=learning_rate, momentum=momentum, weight_decay=weight_decay
+optimizer = torch.optim.AdamW(
+    model.parameters(), lr=learning_rate, weight_decay=weight_decay
 )
 
-# Scheduler (chỉ 1 lần)
-scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
 
 # ============================================
 # 2. LOAD DỮ LIỆU
 # ============================================
+transform_train = transforms.Compose(
+    [
+        transforms.Resize((224, 224)),
+        transforms.RandomHorizontalFlip(p=0.5),
+        transforms.RandomRotation(degrees=15),
+        transforms.ColorJitter(brightness=0.2, contrast=0.2),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+    ]
+)
 
 # Datasets path
 data_dir = "/content/drive/MyDrive/datasets"
@@ -59,7 +66,7 @@ transform = transforms.Compose(
 
 # Load dataset
 train_dataset = datasets.ImageFolder(
-    root=os.path.join(data_dir, "train"), transform=transform
+    root=os.path.join(data_dir, "train"), transform=transform_train
 )
 val_dataset = datasets.ImageFolder(
     root=os.path.join(data_dir, "val"), transform=transform
