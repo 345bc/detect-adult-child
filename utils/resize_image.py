@@ -8,7 +8,7 @@ import os
 from tqdm import tqdm
 
 
-INPUT_DIR = "Datasets/val/Child"
+INPUT_DIR = "data/Adult"
 OUTPUT_DIR = "Child"
 TARGET_SIZE = (224, 224)
 
