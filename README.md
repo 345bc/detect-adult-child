@@ -26,14 +26,14 @@ Python · PyTorch · torchvision · OpenCV · Streamlit · NumPy · Pillow · sc
 
 ### Yêu cầu
 
-- Python 3.8+
+- Python 3.9+
 - CUDA (tùy chọn, hỗ trợ CPU fallback tự động)
 
 
 ### Cài đặt
 
 ```bash
-git clone https://github.com/<your-username>/detect_adult-child_resnet.git
+git clone https://github.com/345bc/detect_adult-child_resnet.git
 cd detect_adult-child_resnet
 pip install -r requirement.txt
 ```
