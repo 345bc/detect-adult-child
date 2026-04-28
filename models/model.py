@@ -78,6 +78,7 @@ class ResNet18(nn.Module):
 
         # Classifier head
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+        self.dropout = nn.Dropout(0.5)
         self.fc = nn.Linear(512, num_classes)
 
     def _make_layer(self, out_channels, num_blocks, stride):
@@ -98,5 +99,6 @@ class ResNet18(nn.Module):
         x = self.layer4(x)
         x = self.avgpool(x)
         x = torch.flatten(x, 1)
+        x = self.dropout(x)
         x = self.fc(x)
         return x

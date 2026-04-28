@@ -1,7 +1,3 @@
-"""
-Bước 3: Huấn luyện ResNet-18 (Loss Function + Optimizer + Train Loop)
-"""
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -11,34 +7,29 @@ import os
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 
-# Import model từ Bước 2
 from models.model import ResNet18
 
 
-# ============================================
-# HÀM LOAD DỮ LIỆU
-# ============================================
+# Data transfomations
 def get_data_loaders(data_dir, batch_size=64, num_workers=2):
-    """Tạo DataLoader cho train, val, test"""
-
     transform_train = transforms.Compose(
         [
-            transforms.Resize((256, 256)),
-            transforms.RandomCrop(224),
-            transforms.RandomHorizontalFlip(p=0.5),
+            # transforms.Resize((256, 256)),
+            # transforms.RandomCrop(224),
+            transforms.RandomHorizontalFlip(),
             transforms.RandomRotation(degrees=20),
-            transforms.ColorJitter(
-                brightness=0.3,
-                contrast=0.3,
-                saturation=0.2,
-                hue=0.1,
-            ),
+            # transforms.ColorJitter(
+            #     brightness=0.3,
+            #     contrast=0.3,
+            #     saturation=0.2,
+            #     hue=0.1,
+            # ),
             transforms.RandomGrayscale(p=0.1),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
-            transforms.RandomErasing(
-                p=0.2, scale=(0.02, 0.2), ratio=(0.3, 3.3), value=0
-            ),
+            # transforms.RandomErasing(
+            #     p=0.2, scale=(0.02, 0.2), ratio=(0.3, 3.3), value=0
+            # ),
         ]
     )
 
@@ -73,9 +64,7 @@ def get_data_loaders(data_dir, batch_size=64, num_workers=2):
     return train_loader, val_loader, test_loader, train_dataset.classes
 
 
-# ============================================
-# HÀM TRAIN MỘT EPOCH
-# ============================================
+# Train an epoch
 def train_one_epoch(model, train_loader, criterion, optimizer, device):
     model.train()
     train_loss = 0
@@ -127,29 +116,25 @@ def validate(model, val_loader, criterion, device):
     return val_loss / len(val_loader), 100.0 * val_correct / val_total
 
 
-# ============================================
-# CODE CHÍNH (CHỈ CHẠY KHI GỌI TRỰC TIẾP)
-# ============================================
 if __name__ == "__main__":
-    # ===== 1. CẤU HÌNH =====
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
     data_dir = "datasets"
-    batch_size = 64
-    num_epochs = 60
+    # batch_size = 64
+    batch_size = 32
+    num_epochs = 70
 
-    # ===== SGD CONFIG (ĐÃ SỬA) =====
-    learning_rate = 0.01  # ← SỬA: từ 0.0001 lên 0.01
-    momentum = 0.9  # ← THÊM: momentum cho SGD
-    weight_decay = 0.0001
+    # learning_rate = 0.01
+    # momentum = 0.9
+    # weight_decay = 0.0001
 
     # ===== 2. LOAD DỮ LIỆU =====
     train_loader, val_loader, test_loader, classes = get_data_loaders(
         data_dir, batch_size, num_workers=2
     )
 
-    print(f"\n📊 DỮ LIỆU:")
+    print(f"\n DỮ LIỆU:")
     print(f"   Train: {len(train_loader.dataset)} ảnh")
     print(f"   Val: {len(val_loader.dataset)} ảnh")
     print(f"   Test: {len(test_loader.dataset)} ảnh")
@@ -159,12 +144,11 @@ if __name__ == "__main__":
     model = ResNet18(num_classes=2).to(device)
     criterion = nn.CrossEntropyLoss()
 
-    # ===== SGD OPTIMIZER (ĐÃ SỬA) =====
     optimizer = torch.optim.SGD(
         model.parameters(),
-        lr=learning_rate,
-        momentum=momentum,
-        weight_decay=weight_decay,
+        lr=0.001,
+        momentum=0.9,
+        # weight_decay=weight_decay,
     )
 
     # ===== SCHEDULER CHO SGD (THÊM MỚI) =====
@@ -177,9 +161,7 @@ if __name__ == "__main__":
     train_losses, val_losses = [], []
     train_accs, val_accs = [], []
 
-    print("\n" + "=" * 50)
-    print("🚀 BẮT ĐẦU HUẤN LUYỆN")
-    print("=" * 50)
+    print("BẮT ĐẦU HUẤN LUYỆN")
 
     for epoch in range(num_epochs):
         print(f"\n📚 Epoch {epoch+1}/{num_epochs}")
